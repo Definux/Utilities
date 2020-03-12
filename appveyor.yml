@@ -13,6 +13,6 @@ build:
   verbosity: minimal
 deploy:
 - provider: Environment
-  name: Nuget Production
+  name: nuget
   on:
     branch: master

@@ -1,5 +1,8 @@
 ﻿namespace Definux.Utilities.Enumerations
 {
+    /// <summary>
+    /// Provides the main types of files.
+    /// </summary>
     public enum FileTypes
     {
         Text = 1,
@@ -18,6 +21,9 @@
         Video = 14,
     }
 
+    /// <summary>
+    /// Provides the main file extensions.
+    /// </summary>
     public enum FileExtensions
     {
         //Text

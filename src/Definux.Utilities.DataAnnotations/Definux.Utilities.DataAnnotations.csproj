@@ -12,6 +12,9 @@
     <Copyright>Definux</Copyright>
     <PackageTags>Utilities</PackageTags>
     <Version>1.0.0</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>logo_128.jpg</PackageIcon>
+    <PackageIconUrl />
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +27,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Definux.Utilities.Options\Definux.Utilities.Options.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\art\logo_128.jpg">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -11,6 +11,7 @@
     <Authors>Georgi Karagogov</Authors>
     <Copyright>Definux</Copyright>
     <PackageTags>Utilities</PackageTags>
+    <Version>$(PACKAGE_VERSION)</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageIcon>logo_128.jpg</PackageIcon>
     <PackageIconUrl />

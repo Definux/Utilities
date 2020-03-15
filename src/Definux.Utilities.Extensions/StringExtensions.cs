@@ -34,5 +34,10 @@ namespace Definux.Utilities.Extensions
         {
             return StringFunctions.SplitWordsByCapitalLetters(targetString);
         }
+
+        public static string ConvertToKey(this string targetString)
+        {
+            return StringFunctions.ConvertToKey(targetString);
+        }
     }
 }

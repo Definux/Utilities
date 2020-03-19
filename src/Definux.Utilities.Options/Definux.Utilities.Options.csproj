@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Company>Definux</Company>
     <Product>Definux.Utilities</Product>
-    <PackageProjectUrl>https://github.com/Definux/Definux.Utilities</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Definux/Definux.Utilities</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Definux/Utilities</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Definux/Utilities</RepositoryUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Description>Help methods, data annotations, extensions, enumerations and options classes.</Description>
     <Authors>Georgi Karagogov</Authors>

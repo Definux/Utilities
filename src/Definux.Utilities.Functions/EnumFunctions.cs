@@ -26,7 +26,7 @@ namespace Definux.Utilities.Functions
         public static EnumValueItem GetEnumItemFromTypeByValue(int value, string enumTypeName)
         {
             EnumValueItem result = null;
-            var enumValues = GetEnumValues(enumTypeName);
+            var enumValues = GetEnumValueItems(enumTypeName);
             if (enumValues != null && enumValues.Any(x => x.Value == value))
             {
                 result = enumValues.FirstOrDefault(x => x.Value == value);
@@ -35,7 +35,7 @@ namespace Definux.Utilities.Functions
             return result;
         }
 
-        public static IEnumerable<EnumValueItem> GetEnumValues(string enumTypeName)
+        public static IEnumerable<EnumValueItem> GetEnumValueItems(string enumTypeName)
         {
             try
             {

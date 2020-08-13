@@ -2,11 +2,11 @@
 {
     public class SimpleResult
     {
-        public SimpleResult(bool success = false)
+        public SimpleResult(bool successed = false)
         {
-            Success = success;
+            Successed = successed;
         }
 
-        public bool Success { get; set; }
+        public bool Successed { get; set; }
     }
 }

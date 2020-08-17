@@ -15,6 +15,7 @@ namespace Definux.Utilities.DataAnnotations
         public VisibleReCaptchaValidateAttribute(IOptions<GoogleRecaptchaKeysOptions> googleRecaptchaKeysConfiguration, IHostingEnvironment hostingEnvironment) : base(googleRecaptchaKeysConfiguration, hostingEnvironment)
         {
             this.reCaptchaSecret = new Lazy<string>(() => this.googleRecaptchaKeys.VisibleRecaptcha.SecretKey);
+            this.VerifyInDevelopment = this.googleRecaptchaKeys.VisibleRecaptcha.VerifyInDevelopment;
         }
     }
 
@@ -23,6 +24,7 @@ namespace Definux.Utilities.DataAnnotations
         public InvisibleReCaptchaValidateAttribute(IOptions<GoogleRecaptchaKeysOptions> googleRecaptchaKeysConfiguration, IHostingEnvironment hostingEnvironment) : base(googleRecaptchaKeysConfiguration, hostingEnvironment)
         {
             this.reCaptchaSecret = new Lazy<string>(() => this.googleRecaptchaKeys.InvisibleRecaptcha.SecretKey);
+            this.VerifyInDevelopment = this.googleRecaptchaKeys.InvisibleRecaptcha.VerifyInDevelopment;
         }
     }
 
@@ -41,6 +43,8 @@ namespace Definux.Utilities.DataAnnotations
             this.hostingEnvironment = hostingEnvironment;
         }
 
+        public bool VerifyInDevelopment { get; protected set; }
+
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             await DoReCaptchaValidation(context);
@@ -49,7 +53,7 @@ namespace Definux.Utilities.DataAnnotations
 
         private async Task DoReCaptchaValidation(ActionExecutingContext context)
         {
-            if (this.hostingEnvironment.IsDevelopment())
+            if (!VerifyInDevelopment && this.hostingEnvironment.IsDevelopment())
             {
                 return;
             }
@@ -124,7 +128,6 @@ namespace Definux.Utilities.DataAnnotations
 
     public interface IReCaptchaResponseTokenContainer
     {
-        [JsonProperty("g-recaptcha-response")]
         string GoogleRecaptchaResponse { get; set; }
     }
 }

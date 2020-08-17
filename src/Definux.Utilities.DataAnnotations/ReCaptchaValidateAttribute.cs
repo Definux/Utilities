@@ -54,12 +54,21 @@ namespace Definux.Utilities.DataAnnotations
                 return;
             }
 
-            if (!context.HttpContext.Request.HasFormContentType)
+            string token = null;
+
+            if (context.HttpContext.Request.HasFormContentType && context.HttpContext.Request.Form.ContainsKey(RecaptchaResponseTokenKey))
             {
-                AddModelError(context, "No reCaptcha Token Found");
-                return;
+                token = context.HttpContext.Request.Form[RecaptchaResponseTokenKey];
             }
-            string token = context.HttpContext.Request.Form[RecaptchaResponseTokenKey];
+            else if (context.Result is IReCaptchaResponseTokenContainer)
+            {
+                var model = (IReCaptchaResponseTokenContainer)context.Result;
+                if (model != null)
+                {
+                    token = model.GoogleRecaptchaResponse;
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(token))
             {
                 AddModelError(context, "No reCaptcha Token Found");
@@ -111,5 +120,11 @@ namespace Definux.Utilities.DataAnnotations
 
         [JsonProperty("errorcodes")]
         public string[] ErrorCodes { get; set; }
+    }
+
+    public interface IReCaptchaResponseTokenContainer
+    {
+        [JsonProperty("g-recaptcha-response")]
+        string GoogleRecaptchaResponse { get; set; }
     }
 }

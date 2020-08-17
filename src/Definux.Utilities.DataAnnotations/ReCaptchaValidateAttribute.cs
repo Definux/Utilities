@@ -64,13 +64,9 @@ namespace Definux.Utilities.DataAnnotations
             {
                 token = context.HttpContext.Request.Form[RecaptchaResponseTokenKey];
             }
-            else if (context.Result is IReCaptchaResponseTokenContainer)
+            else if (context.HttpContext.Request.Headers.ContainsKey(RecaptchaResponseTokenKey))
             {
-                var model = (IReCaptchaResponseTokenContainer)context.Result;
-                if (model != null)
-                {
-                    token = model.GoogleRecaptchaResponse;
-                }
+                token = context.HttpContext.Request.Headers[RecaptchaResponseTokenKey];
             }
 
             if (string.IsNullOrWhiteSpace(token))
@@ -124,10 +120,5 @@ namespace Definux.Utilities.DataAnnotations
 
         [JsonProperty("errorcodes")]
         public string[] ErrorCodes { get; set; }
-    }
-
-    public interface IReCaptchaResponseTokenContainer
-    {
-        string GoogleRecaptchaResponse { get; set; }
     }
 }

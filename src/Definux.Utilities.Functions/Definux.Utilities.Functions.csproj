@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.2.0" />
-    <PackageReference Include="System.Text.Encodings.Web" Version="4.7.0" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>

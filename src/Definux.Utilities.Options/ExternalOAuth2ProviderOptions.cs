@@ -1,23 +1,14 @@
 ﻿namespace Definux.Utilities.Options
 {
+    /// <summary>
+    /// Implementation of external OAuth2 provider options.
+    /// </summary>
     public class ExternalOAuth2ProviderOptions
     {
+        /// <inheritdoc cref="FacebookOAuth2Settings"/>
         public FacebookOAuth2Settings FacebookSettings { get; set; }
 
+        /// <inheritdoc cref="GoogleOAuth2Settings"/>
         public GoogleOAuth2Settings GoogleSettings { get; set; }
-    }
-
-    public class FacebookOAuth2Settings
-    {
-        public string AppId { get; set; }
-
-        public string AppSecret { get; set; }
-    }
-
-    public class GoogleOAuth2Settings
-    {
-        public string ClientId { get; set; }
-
-        public string ClientSecret { get; set; }
     }
 }

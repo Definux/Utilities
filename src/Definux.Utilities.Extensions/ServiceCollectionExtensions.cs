@@ -5,12 +5,15 @@ using Microsoft.Extensions.Options;
 
 namespace Definux.Utilities.Extensions
 {
+    /// <summary>
+    /// Extensions for <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Load options from appsettings.json.
         /// </summary>
-        /// <typeparam name="TOptions"></typeparam>
+        /// <typeparam name="TOptions">Option object that implement the option configuration.</typeparam>
         /// <param name="services"></param>
         /// <param name="sectionName">Name of the section where are defined the options.</param>
         /// <returns></returns>
@@ -71,7 +74,7 @@ namespace Definux.Utilities.Extensions
         /// <summary>
         /// Get loaded options from appsettings.json.
         /// </summary>
-        /// <typeparam name="TOptions"></typeparam>
+        /// <typeparam name="TOptions">Option object that implement the option configuration.</typeparam>
         /// <param name="services"></param>
         /// <returns></returns>
         public static TOptions GetOptions<TOptions>(this IServiceCollection services)

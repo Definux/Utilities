@@ -2,22 +2,26 @@
 
 namespace Definux.Utilities.Functions
 {
+    /// <summary>
+    /// Functions for strings.
+    /// </summary>
     public static class StringFunctions
     {
         /// <summary>
-        /// Split pascal case word to separate words.
+        /// Splits pascal case string to separate words.
         /// </summary>
         /// <param name="words"></param>
         /// <returns></returns>
         public static string SplitWordsByCapitalLetters(string words)
         {
-            words = words.Replace("_", "");
+            words = words.Replace("_", string.Empty);
             return words.Aggregate(string.Empty, (result, next) =>
             {
                 if (char.IsUpper(next) && result.Length > 1)
                 {
                     result += ' ';
                 }
+
                 return result + next;
             });
         }
@@ -29,13 +33,14 @@ namespace Definux.Utilities.Functions
         /// <returns></returns>
         public static string ConvertToKey(string words)
         {
-            words = words.Replace("_", "");
+            words = words.Replace("_", string.Empty);
             string key = words.Aggregate(string.Empty, (result, next) =>
             {
                 if (char.IsUpper(next) && result.Length > 1)
                 {
                     result += '_';
                 }
+
                 return result + next;
             });
 

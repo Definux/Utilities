@@ -2,23 +2,23 @@
 
 namespace Definux.Utilities.Validation
 {
+    /// <inheritdoc cref="IHandler{T}"/>
     public abstract class Handler<T> : IHandler<T>
     {
         private IHandler<T> nextHandler;
-        protected T requestObject;
 
         /// <summary>
-        /// Receive object and validation message. If current validation pass successfully continue with the validation chain. If validation fail - return null.
+        /// Object which is used for processing and validation.
         /// </summary>
-        /// <param name="requestObject"></param>
-        /// <param name="validationResultMessage"></param>
-        /// <returns></returns>
+        protected T RequestObject { get; set; }
+
+        /// <inheritdoc/>
         public virtual T Handle(T requestObject, out string validationResultMessage)
         {
-            this.requestObject = requestObject;
-            validationResultMessage = HandleProcessAction();
+            this.RequestObject = requestObject;
+            validationResultMessage = this.HandleProcessAction();
 
-            T returnObject = this.requestObject;
+            T returnObject = this.RequestObject;
             if (returnObject != null && this.nextHandler != null)
             {
                 string newResultMessage = string.Empty;
@@ -30,11 +30,7 @@ namespace Definux.Utilities.Validation
             return returnObject;
         }
 
-        /// <summary>
-        /// Set next validation handler to validation chain.
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IHandler<T> SetNext(IHandler<T> handler)
         {
             this.nextHandler = handler;
@@ -43,7 +39,7 @@ namespace Definux.Utilities.Validation
         }
 
         /// <summary>
-        /// Method that contains current validation logic for current handler. If validation pass successfully return empty string as a message, if not - return validation message and set handler object to null.
+        /// Method that contains the validation logic for current handler. If validation pass successfully return empty string as a message, if not - return validation message and set handler object to null.
         /// </summary>
         /// <returns></returns>
         protected virtual string HandleProcessAction()

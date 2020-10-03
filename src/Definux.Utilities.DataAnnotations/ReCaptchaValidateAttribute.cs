@@ -1,59 +1,71 @@
-﻿using Definux.Utilities.Options;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Definux.Utilities.DataAnnotations.Helpers;
+using Definux.Utilities.Options;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace Definux.Utilities.DataAnnotations
 {
-    public class VisibleReCaptchaValidateAttribute : ReCaptchaValidateAttribute
-    {
-        public VisibleReCaptchaValidateAttribute(IOptions<GoogleRecaptchaKeysOptions> googleRecaptchaKeysConfiguration, IHostingEnvironment hostingEnvironment) : base(googleRecaptchaKeysConfiguration, hostingEnvironment)
-        {
-            this.reCaptchaSecret = new Lazy<string>(() => this.googleRecaptchaKeys.VisibleRecaptcha.SecretKey);
-            this.VerifyInDevelopment = this.googleRecaptchaKeys.VisibleRecaptcha.VerifyInDevelopment;
-        }
-    }
-
-    public class InvisibleReCaptchaValidateAttribute : ReCaptchaValidateAttribute
-    {
-        public InvisibleReCaptchaValidateAttribute(IOptions<GoogleRecaptchaKeysOptions> googleRecaptchaKeysConfiguration, IHostingEnvironment hostingEnvironment) : base(googleRecaptchaKeysConfiguration, hostingEnvironment)
-        {
-            this.reCaptchaSecret = new Lazy<string>(() => this.googleRecaptchaKeys.InvisibleRecaptcha.SecretKey);
-            this.VerifyInDevelopment = this.googleRecaptchaKeys.InvisibleRecaptcha.VerifyInDevelopment;
-        }
-    }
-
+    /// <summary>
+    /// Validation attribute for ReCaptcha.
+    /// </summary>
     public abstract class ReCaptchaValidateAttribute : ActionFilterAttribute
     {
+        /// <summary>
+        /// ReCaptcha Model state error key.
+        /// </summary>
         public const string ReCaptchaModelErrorKey = "ReCaptcha";
+
         private const string RecaptchaResponseTokenKey = "g-recaptcha-response";
         private const string ApiVerificationEndpoint = "https://www.google.com/recaptcha/api/siteverify";
-        protected readonly GoogleRecaptchaKeysOptions googleRecaptchaKeys;
-        protected Lazy<string> reCaptchaSecret;
         private readonly IHostingEnvironment hostingEnvironment;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReCaptchaValidateAttribute"/> class.
+        /// </summary>
+        /// <param name="googleRecaptchaKeysConfiguration"></param>
+        /// <param name="hostingEnvironment"></param>
         public ReCaptchaValidateAttribute(IOptions<GoogleRecaptchaKeysOptions> googleRecaptchaKeysConfiguration, IHostingEnvironment hostingEnvironment)
         {
-            this.googleRecaptchaKeys = googleRecaptchaKeysConfiguration.Value;
+            this.GoogleRecaptchaKeys = googleRecaptchaKeysConfiguration.Value;
             this.hostingEnvironment = hostingEnvironment;
         }
 
+        /// <summary>
+        /// Flag that turn on/off validation for development environment.
+        /// </summary>
         public bool VerifyInDevelopment { get; protected set; }
 
+        /// <summary>
+        /// Options implementation for Google ReCaptcha.
+        /// </summary>
+        protected GoogleRecaptchaKeysOptions GoogleRecaptchaKeys { get; set; }
+
+        /// <summary>
+        /// ReCaptcha secret key.
+        /// </summary>
+        protected Lazy<string> ReCaptchaSecret { get; set; }
+
+        /// <inheritdoc/>
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            await DoReCaptchaValidation(context);
+            await this.DoReCaptchaValidation(context);
             await base.OnActionExecutionAsync(context, next);
+        }
+
+        private static void AddModelError(ActionExecutingContext context, string error)
+        {
+            context.ModelState.AddModelError(ReCaptchaModelErrorKey, error.ToString());
         }
 
         private async Task DoReCaptchaValidation(ActionExecutingContext context)
         {
-            if (!VerifyInDevelopment && this.hostingEnvironment.IsDevelopment())
+            if (!this.VerifyInDevelopment && this.hostingEnvironment.IsDevelopment())
             {
                 return;
             }
@@ -75,12 +87,8 @@ namespace Definux.Utilities.DataAnnotations
             }
             else
             {
-                await ValidateRecaptcha(context, token);
+                await this.ValidateRecaptcha(context, token);
             }
-        }
-        private static void AddModelError(ActionExecutingContext context, string error)
-        {
-            context.ModelState.AddModelError(ReCaptchaModelErrorKey, error.ToString());
         }
 
         private async Task ValidateRecaptcha(ActionExecutingContext context, string token)
@@ -89,8 +97,8 @@ namespace Definux.Utilities.DataAnnotations
             {
                 var content = new FormUrlEncodedContent(new[]
                 {
-                    new KeyValuePair<string, string>("secret", this.reCaptchaSecret.Value),
-                    new KeyValuePair<string, string>("response", token)
+                    new KeyValuePair<string, string>("secret", this.ReCaptchaSecret.Value),
+                    new KeyValuePair<string, string>("response", token),
                 });
                 HttpResponseMessage response = await webClient.PostAsync(ApiVerificationEndpoint, content);
                 string json = await response.Content.ReadAsStringAsync();
@@ -105,20 +113,5 @@ namespace Definux.Utilities.DataAnnotations
                 }
             }
         }
-    }
-
-    public class ReCaptchaResponse
-    {
-        [JsonProperty("success")]
-        public bool Success { get; set; }
-
-        [JsonProperty("challenge_ts")]
-        public string ChallengeTs { get; set; }
-
-        [JsonProperty("hostname")]
-        public string Hostname { get; set; }
-
-        [JsonProperty("errorcodes")]
-        public string[] ErrorCodes { get; set; }
     }
 }

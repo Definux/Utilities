@@ -1,28 +1,44 @@
-﻿using Definux.Utilities.DataAnnotations;
-using Definux.Utilities.Objects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Definux.Utilities.DataAnnotations;
+using Definux.Utilities.Objects;
 
 namespace Definux.Utilities.Functions
 {
+    /// <summary>
+    /// Functions for enumerations.
+    /// </summary>
     public static class EnumFunctions
     {
+        /// <summary>
+        /// Converts enumeration type to dictionary with values and names of the enumeration.
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
         public static Dictionary<int, string> GetEnumList(Type enumType)
         {
             if (enumType.BaseType != typeof(Enum))
             {
                 return null;
             }
+
             var enumValues = enumType.GetEnumValues();
             Dictionary<int, string> result = new Dictionary<int, string>();
             foreach (var value in enumValues)
             {
-                result[(int)(Enum.Parse(enumType, value.ToString()))] = StringFunctions.SplitWordsByCapitalLetters(value.ToString());
+                result[(int)Enum.Parse(enumType, value.ToString())] = StringFunctions.SplitWordsByCapitalLetters(value.ToString());
             }
+
             return result;
         }
 
+        /// <summary>
+        /// Gets <see cref="EnumValueItem"/> from the enumeration value and assembly type name.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="enumTypeName"></param>
+        /// <returns></returns>
         public static EnumValueItem GetEnumItemFromTypeByValue(int value, string enumTypeName)
         {
             EnumValueItem result = null;
@@ -35,6 +51,11 @@ namespace Definux.Utilities.Functions
             return result;
         }
 
+        /// <summary>
+        /// Gets collection of <see cref="EnumValueItem"/> for specified enumeration assembly type name.
+        /// </summary>
+        /// <param name="enumTypeName"></param>
+        /// <returns></returns>
         public static IEnumerable<EnumValueItem> GetEnumValueItems(string enumTypeName)
         {
             try
@@ -54,6 +75,11 @@ namespace Definux.Utilities.Functions
             }
         }
 
+        /// <summary>
+        /// Gets collection of <see cref="EnumValueItem"/> for specified enumeration type.
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
         public static IEnumerable<EnumValueItem> GetEnumValueItems(Type enumType)
         {
             try
@@ -68,7 +94,7 @@ namespace Definux.Utilities.Functions
                 var enumValues = enumType.GetEnumValues();
                 foreach (var value in enumValues)
                 {
-                    int enumValue = (int)(Enum.Parse(enumType, value.ToString()));
+                    int enumValue = (int)Enum.Parse(enumType, value.ToString());
                     var memberInfo = enumType.GetMember(enumType.GetEnumName(value));
                     var keyAttribute = memberInfo[0]
                         .GetCustomAttributes(typeof(EnumKeyAttribute), false)
@@ -86,7 +112,7 @@ namespace Definux.Utilities.Functions
                     {
                         Value = enumValue,
                         Name = name,
-                        Key = key
+                        Key = key,
                     });
                 }
 
@@ -98,6 +124,11 @@ namespace Definux.Utilities.Functions
             }
         }
 
+        /// <summary>
+        /// Gets enumeration type from the enumeration assembly name.
+        /// </summary>
+        /// <param name="enumName"></param>
+        /// <returns></returns>
         public static Type GetEnumType(string enumName)
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())

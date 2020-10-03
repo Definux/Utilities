@@ -5,27 +5,36 @@ using System.Security.Cryptography;
 
 namespace Definux.Utilities.Functions
 {
+    /// <summary>
+    /// Interval authenticator functions.
+    /// </summary>
     public static class IntervalAuthenticatorFunctions
     {
+        private const string Base32AllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+
         private const int IntervalLength = 30;
         private const int PinLength = 6;
         private static readonly int PinModulo = (int)Math.Pow(10, PinLength);
         private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        private const string Base32AllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
         /// <summary>
-        ///   Number of intervals that have elapsed.
+        /// Number of intervals that have elapsed.
         /// </summary>
-        static long CurrentInterval
+        internal static long CurrentInterval
         {
             get
             {
-                var ElapsedSeconds = (long)Math.Floor((DateTime.UtcNow - UnixEpoch).TotalSeconds);
+                var elapsedSeconds = (long)Math.Floor((DateTime.UtcNow - UnixEpoch).TotalSeconds);
 
-                return ElapsedSeconds / IntervalLength;
+                return elapsedSeconds / IntervalLength;
             }
         }
 
+        /// <summary>
+        /// Generate pin code from authenticator key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public static string GeneratePin(string key)
         {
             return GeneratePin(key.ToByteArray(), CurrentInterval);
@@ -35,38 +44,32 @@ namespace Definux.Utilities.Functions
         {
             const int SizeOfInt32 = 4;
 
-            var CounterBytes = BitConverter.GetBytes(counter);
+            var counterBytes = BitConverter.GetBytes(counter);
 
             if (BitConverter.IsLittleEndian)
             {
-                //spec requires bytes in big-endian order
-                Array.Reverse(CounterBytes);
+                Array.Reverse(counterBytes);
             }
 
-            var Hash = new HMACSHA1(key).ComputeHash(CounterBytes);
-            var Offset = Hash[Hash.Length - 1] & 0xF;
+            var hash = new HMACSHA1(key).ComputeHash(counterBytes);
+            var offset = hash[hash.Length - 1] & 0xF;
 
-            var SelectedBytes = new byte[SizeOfInt32];
-            Buffer.BlockCopy(Hash, Offset, SelectedBytes, 0, SizeOfInt32);
+            var selectedBytes = new byte[SizeOfInt32];
+            Buffer.BlockCopy(hash, offset, selectedBytes, 0, SizeOfInt32);
 
             if (BitConverter.IsLittleEndian)
             {
-                //spec interprets bytes in big-endian order
-                Array.Reverse(SelectedBytes);
+                Array.Reverse(selectedBytes);
             }
 
-            var SelectedInteger = BitConverter.ToInt32(SelectedBytes, 0);
+            var selectedInteger = BitConverter.ToInt32(selectedBytes, 0);
+            var truncatedHash = selectedInteger & 0x7FFFFFFF;
+            var pin = truncatedHash % PinModulo;
 
-            //remove the most significant bit for interoperability per spec
-            var TruncatedHash = SelectedInteger & 0x7FFFFFFF;
-
-            //generate number of digits for given pin length
-            var Pin = TruncatedHash % PinModulo;
-
-            return Pin.ToString(CultureInfo.InvariantCulture).PadLeft(PinLength, '0');
+            return pin.ToString(CultureInfo.InvariantCulture).PadLeft(PinLength, '0');
         }
 
-        public static byte[] ToByteArray(this string input)
+        private static byte[] ToByteArray(this string input)
         {
             if (string.IsNullOrEmpty(input))
             {

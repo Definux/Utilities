@@ -1,55 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
+using Definux.Utilities.Functions.Helpers;
 
 namespace Definux.Utilities.Functions
 {
+    /// <summary>
+    /// Functions for expressions.
+    /// </summary>
     public static class ExpressionFunctions
     {
-        public static Expression<Func<T, Boolean>> OrElse<T>(Expression<Func<T, Boolean>> left, Expression<Func<T, Boolean>> right)
+        /// <summary>
+        /// Creates an expressions with OR conditional operation.
+        /// </summary>
+        /// <typeparam name="T">Type of the entity for expression.</typeparam>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static Expression<Func<T, bool>> OrElse<T>(Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
         {
-            Expression<Func<T, Boolean>> combined = Expression.Lambda<Func<T, Boolean>>(
+            Expression<Func<T, bool>> combined = Expression.Lambda<Func<T, bool>>(
                 Expression.OrElse(
                     left.Body,
-                    new ExpressionParameterReplacer(right.Parameters, left.Parameters).Visit(right.Body)
-                    ), left.Parameters);
+                    new ExpressionParameterReplacer(right.Parameters, left.Parameters).Visit(right.Body)), left.Parameters);
 
             return combined;
         }
 
-        public static Expression<Func<T, Boolean>> AndAlso<T>(Expression<Func<T, Boolean>> left, Expression<Func<T, Boolean>> right)
+        /// <summary>
+        /// Creates an expressions with AND conditional operation.
+        /// </summary>
+        /// <typeparam name="T">Type of the entity for expression.</typeparam>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static Expression<Func<T, bool>> AndAlso<T>(Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
         {
-            Expression<Func<T, Boolean>> combined = Expression.Lambda<Func<T, Boolean>>(
+            Expression<Func<T, bool>> combined = Expression.Lambda<Func<T, bool>>(
                 Expression.AndAlso(
                     left.Body,
-                    new ExpressionParameterReplacer(right.Parameters, left.Parameters).Visit(right.Body)
-                    ), left.Parameters);
+                    new ExpressionParameterReplacer(right.Parameters, left.Parameters).Visit(right.Body)), left.Parameters);
 
             return combined;
-        }
-    }
-
-    internal class ExpressionParameterReplacer : ExpressionVisitor
-    {
-        private IDictionary<ParameterExpression, ParameterExpression> ParameterReplacements { get; set; }
-
-        internal ExpressionParameterReplacer
-        (IList<ParameterExpression> fromParameters, IList<ParameterExpression> toParameters)
-        {
-            ParameterReplacements = new Dictionary<ParameterExpression, ParameterExpression>();
-
-            for (int i = 0; i != fromParameters.Count && i != toParameters.Count; i++)
-            { ParameterReplacements.Add(fromParameters[i], toParameters[i]); }
-        }
-
-        protected override Expression VisitParameter(ParameterExpression node)
-        {
-            ParameterExpression replacement;
-
-            if (ParameterReplacements.TryGetValue(node, out replacement))
-            { node = replacement; }
-
-            return base.VisitParameter(node);
         }
     }
 }

@@ -3,8 +3,16 @@ using System.Text;
 
 namespace Definux.Utilities.Functions
 {
+    /// <summary>
+    /// Functions for cryptography.
+    /// </summary>
     public static class CryptoFunctions
     {
+        /// <summary>
+        /// Generate MD5 hash from string.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static string MD5Hash(string input)
         {
             MD5 md5 = MD5.Create();

@@ -1,18 +1,38 @@
-﻿using Definux.Utilities.Enumerations;
-using System;
+﻿using System;
+using Definux.Utilities.Enumerations;
 
 namespace Definux.Utilities.Functions
 {
+    /// <summary>
+    /// Functions for files.
+    /// </summary>
     public static class FilesFunctions
     {
-        private static readonly string[] SizeSuffixes =
-           { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+        private static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
 
-        public static string SizeSuffix(Int64 value, int decimalPlaces = 1)
+        /// <summary>
+        /// Gets file size suffix.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="decimalPlaces"></param>
+        /// <returns></returns>
+        public static string SizeSuffix(long value, int decimalPlaces = 1)
         {
-            if (decimalPlaces < 0) { throw new ArgumentOutOfRangeException("decimalPlaces"); }
-            if (value < 0) { return "-" + SizeSuffix(-value); }
-            if (value == 0) { return string.Format("{0:n" + decimalPlaces + "} bytes", 0); }
+            if (decimalPlaces < 0)
+            {
+                throw new ArgumentOutOfRangeException("decimalPlaces");
+            }
+
+            if (value < 0)
+            {
+                return "-" + SizeSuffix(-value);
+            }
+
+            if (value == 0)
+            {
+                return string.Format("{0:n" + decimalPlaces + "} bytes", 0);
+            }
+
             int mag = (int)Math.Log(value, 1024);
             decimal adjustedSize = (decimal)value / (1L << (mag * 10));
             if (Math.Round(adjustedSize, decimalPlaces) >= 1000)
@@ -21,23 +41,35 @@ namespace Definux.Utilities.Functions
                 adjustedSize /= 1024;
             }
 
-            return string.Format("{0:n" + decimalPlaces + "} {1}",
-                adjustedSize,
-                SizeSuffixes[mag]);
+            return string.Format("{0:n" + decimalPlaces + "} {1}", adjustedSize, SizeSuffixes[mag]);
         }
 
+        /// <summary>
+        /// Get unique file name.
+        /// </summary>
+        /// <returns></returns>
         public static string GetUniqueFileName()
         {
             return $"f{CryptoFunctions.MD5Hash(Guid.NewGuid().ToString()).ToLower()}{Guid.NewGuid().ToString().ToLower().Replace("-", string.Empty)}";
         }
 
+        /// <summary>
+        /// Converts file extensions string to <see cref="FileExtensions"/>.
+        /// </summary>
+        /// <param name="extension"></param>
+        /// <returns></returns>
         public static FileExtensions GetFileExtension(string extension)
         {
             string enumStandardExtension = $"_{extension.Replace(".", string.Empty)}";
-            FileExtensions result = (FileExtensions)(Enum.Parse(typeof(FileExtensions), enumStandardExtension, true));
+            FileExtensions result = (FileExtensions)Enum.Parse(typeof(FileExtensions), enumStandardExtension, true);
             return result;
         }
 
+        /// <summary>
+        /// Gets <see cref="FileTypes"/> from <see cref="FileExtensions"/>.
+        /// </summary>
+        /// <param name="fileExtension"></param>
+        /// <returns></returns>
         public static FileTypes GetFileType(FileExtensions fileExtension)
         {
             int fileExtensionCode = (int)fileExtension;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 namespace Definux.Utilities.Extensions
 {
@@ -89,7 +90,7 @@ namespace Definux.Utilities.Extensions
         }
 
         /// <summary>
-        /// Get absolute URL from relative path and base path of the current request.
+        /// Gets absolute URL from relative path and base path of the current request.
         /// </summary>
         /// <param name="httpContext"></param>
         /// <param name="relativeRoute"></param>
@@ -97,6 +98,31 @@ namespace Definux.Utilities.Extensions
         public static string GetAbsoluteRoute(this HttpContext httpContext, string relativeRoute)
         {
             return $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{relativeRoute}";
+        }
+
+        /// <summary>
+        /// Gets route value by its key.
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <param name="routeValueKey"></param>
+        /// <param name="normalize">Converts the value to lower case string.</param>
+        /// <returns></returns>
+        public static string GetRouteValueOrDefault(this HttpContext httpContext, string routeValueKey, bool normalize = false)
+        {
+            var route = httpContext.GetRouteData();
+            object routeValueObject = string.Empty;
+            string routeValue = string.Empty;
+            route.Values.TryGetValue(routeValueKey, out routeValueObject);
+            if (routeValueObject != null)
+            {
+                routeValue = routeValueObject.ToString();
+                if (normalize)
+                {
+                    routeValue = routeValue.ToLower();
+                }
+            }
+
+            return routeValue;
         }
     }
 }

@@ -155,5 +155,26 @@ namespace Definux.Utilities.Extensions
 
             return resultMethod;
         }
+
+        /// <summary>
+        /// Validates enum existing.
+        /// </summary>
+        /// <typeparam name="TEnum">Type of the enum.</typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsEnumExist<TEnum>(TEnum value)
+        {
+            var enumType = typeof(TEnum);
+            var enumValues = Enum.GetValues(enumType);
+            foreach (var enumValue in enumValues)
+            {
+                if ((int)Enum.Parse(enumType, value.ToString()) == (int)enumValue)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

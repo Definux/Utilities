@@ -162,7 +162,7 @@ namespace Definux.Utilities.Extensions
         /// <typeparam name="TEnum">Type of the enum.</typeparam>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool IsEnumExist<TEnum>(TEnum value)
+        public static bool IsEnumExist<TEnum>(this TEnum value)
         {
             var enumType = typeof(TEnum);
             var enumValues = Enum.GetValues(enumType);

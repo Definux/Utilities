@@ -1,4 +1,5 @@
 version: 1.0.{build}
+skip_tags: true
 image: Visual Studio 2019
 clone_depth: 1
 assembly_info:
@@ -21,5 +22,14 @@ build:
 deploy:
 - provider: Environment
   name: nuget
+  on:
+    branch: master
+- provider: GitHub
+  tag: v$(appveyor_build_version)
+  release: $(appveyor_build_version)
+  description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
+  auth_token:
+    secure: C6D3cCL0/G5S9hyReiIaq6FA/vKmtgB8UGVstzlSs20bEUJ8mHfdlo8Nu03Sgt70
+  artifact: /.*\.nupkg/
   on:
     branch: master

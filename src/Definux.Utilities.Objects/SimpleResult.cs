@@ -8,25 +8,25 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleResult"/> class.
         /// </summary>
-        /// <param name="successed"></param>
-        public SimpleResult(bool successed = false)
+        /// <param name="succeeded"></param>
+        public SimpleResult(bool succeeded = false)
         {
-            this.Successed = successed;
+            this.Succeeded = succeeded;
         }
 
         /// <summary>
-        /// Predefined successfull result.
+        /// Predefined successful result.
         /// </summary>
         public static SimpleResult SuccessfulResult => new SimpleResult(true);
 
         /// <summary>
-        /// Predefined unsuccessfull result.
+        /// Predefined unsuccessful result.
         /// </summary>
         public static SimpleResult UnsuccessfulResult => new SimpleResult(false);
 
         /// <summary>
-        /// Status of the result.
+        /// Flag indicating whether if the operation succeeded or not.
         /// </summary>
-        public bool Successed { get; set; }
+        public bool Succeeded { get; protected set; }
     }
 }

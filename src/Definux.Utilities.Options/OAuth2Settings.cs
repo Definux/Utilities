@@ -1,10 +1,15 @@
 ﻿namespace Definux.Utilities.Options
 {
     /// <summary>
-    /// Implementation of Google OAuth2 settings.
+    /// Implementation of OAuth2 settings.
     /// </summary>
-    public class GoogleOAuth2Settings
+    public class OAuth2Settings
     {
+        /// <summary>
+        /// Name of the external provider.
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         /// Client id.
         /// </summary>

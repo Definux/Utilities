@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace Definux.Utilities.Objects
     /// Implementation of list separated on pages.
     /// </summary>
     /// <typeparam name="T">List item type.</typeparam>
-    public class PaginatedList<T>
+    public class PaginatedList<T> : IEnumerable<T>
     {
         /// <summary>
         /// List of all items in the list.
@@ -55,5 +56,17 @@ namespace Definux.Utilities.Objects
         /// Index of the first item of the current page based on all items.
         /// </summary>
         public int StartRow => (this.CurrentPage - 1) * this.PageSize;
+
+        /// <inheritdoc />
+        public IEnumerator<T> GetEnumerator()
+        {
+            return this.Items.GetEnumerator();
+        }
+
+        /// <inheritdoc />
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
     }
 }

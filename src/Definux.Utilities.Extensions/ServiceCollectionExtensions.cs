@@ -55,9 +55,9 @@ namespace Definux.Utilities.Extensions
         /// <param name="services"></param>
         /// <param name="sectionName">Name of the section where are defined external OAuth2 providers options. Default value is the name of option class.</param>
         /// <returns></returns>
-        public static IServiceCollection LoadOAuth2Options(this IServiceCollection services, string sectionName = nameof(ExternalOAuth2ProviderOptions))
+        public static IServiceCollection LoadOAuth2Options(this IServiceCollection services, string sectionName = nameof(ExternalOAuth2ProvidersOptions))
         {
-            return services.LoadOptions<ExternalOAuth2ProviderOptions>(sectionName);
+            return services.LoadOptions<ExternalOAuth2ProvidersOptions>(sectionName);
         }
 
         /// <summary>
@@ -111,9 +111,9 @@ namespace Definux.Utilities.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static ExternalOAuth2ProviderOptions GetOAuth2Options(this IServiceCollection services)
+        public static ExternalOAuth2ProvidersOptions GetOAuth2Options(this IServiceCollection services)
         {
-            return services.GetOptions<ExternalOAuth2ProviderOptions>();
+            return services.GetOptions<ExternalOAuth2ProvidersOptions>();
         }
 
         /// <summary>

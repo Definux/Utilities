@@ -68,5 +68,15 @@ namespace Definux.Utilities.Extensions
         {
             return StringFunctions.ConvertToKey(targetString);
         }
+
+        /// <summary>
+        /// <inheritdoc cref="StringFunctions.ClearMultipleIntervals(string)"/>
+        /// </summary>
+        /// <param name="targetString"></param>
+        /// <returns></returns>
+        private static string ClearMultipleIntervals(this string targetString)
+        {
+            return StringFunctions.ClearMultipleIntervals(targetString);
+        }
     }
 }

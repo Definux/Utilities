@@ -17,6 +17,33 @@ namespace Definux.Utilities.Objects
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="MutationResult"/> class.
+        /// </summary>
+        /// <param name="mutatedEntityId"></param>
+        public MutationResult(int mutatedEntityId)
+        {
+            this.MutatedEntityId = mutatedEntityId.ToString();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MutationResult"/> class.
+        /// </summary>
+        /// <param name="mutatedEntityId"></param>
+        public MutationResult(long mutatedEntityId)
+        {
+            this.MutatedEntityId = mutatedEntityId.ToString();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MutationResult"/> class.
+        /// </summary>
+        /// <param name="mutatedEntityId"></param>
+        public MutationResult(Guid mutatedEntityId)
+        {
+            this.MutatedEntityId = mutatedEntityId.ToString();
+        }
+
+        /// <summary>
         /// Mutated entity id as string.
         /// </summary>
         public string MutatedEntityId { get; set; }

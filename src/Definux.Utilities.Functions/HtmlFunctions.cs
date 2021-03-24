@@ -16,7 +16,7 @@ namespace Definux.Utilities.Functions
         /// <returns></returns>
         public static string GetStringFromHtmlContent(IHtmlContent content)
         {
-            using (StringWriter writer = new StringWriter())
+            using (var writer = new StringWriter())
             {
                 content.WriteTo(writer, HtmlEncoder.Default);
                 return writer.ToString();

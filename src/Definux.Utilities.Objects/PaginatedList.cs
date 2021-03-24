@@ -9,7 +9,7 @@ namespace Definux.Utilities.Objects
     /// Implementation of list separated on pages.
     /// </summary>
     /// <typeparam name="T">List item type.</typeparam>
-    public class PaginatedList<T> : IEnumerable<T>
+    public class PaginatedList<T>
     {
         /// <summary>
         /// List of all items in the list.
@@ -24,7 +24,7 @@ namespace Definux.Utilities.Objects
         /// <summary>
         /// Count of all items in the list.
         /// </summary>
-        public int ItemsCount => (this.Items != null) ? this.Items.Count() : 0;
+        public int ItemsCount => this.Items?.Count() ?? 0;
 
         /// <summary>
         /// Amount of the pages based on all items and page size.
@@ -57,16 +57,15 @@ namespace Definux.Utilities.Objects
         /// </summary>
         public int StartRow => (this.CurrentPage - 1) * this.PageSize;
 
-        /// <inheritdoc />
-        public IEnumerator<T> GetEnumerator()
+        /// <summary>
+        /// Validates the list properties.
+        /// </summary>
+        public void ValidateList()
         {
-            return this.Items.GetEnumerator();
-        }
-
-        /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
+            if (this.PageSize < this.ItemsCount)
+            {
+                throw new ArgumentException("List items cannot exceeds the page size.");
+            }
         }
     }
 }

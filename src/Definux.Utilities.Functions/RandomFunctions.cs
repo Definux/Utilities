@@ -8,7 +8,7 @@ namespace Definux.Utilities.Functions
     /// </summary>
     public static class RandomFunctions
     {
-        private static Random random = new Random();
+        private static readonly Random Random = new Random();
 
         /// <summary>
         /// Gets random element from array.
@@ -18,7 +18,7 @@ namespace Definux.Utilities.Functions
         /// <returns></returns>
         public static T GetRandomElementFromArray<T>(T[] array)
         {
-            return array[random.Next(0, array.Length)];
+            return array[Random.Next(0, array.Length)];
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Definux.Utilities.Functions
             if (Directory.Exists(directory))
             {
                 var files = Directory.GetFiles(directory);
-                if (files != null && files.Length > 0)
+                if (files.Length > 0)
                 {
                     return GetRandomElementFromArray(files);
                 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Definux.Utilities.Functions
 {
@@ -14,12 +15,28 @@ namespace Definux.Utilities.Functions
         /// <returns></returns>
         public static string SplitWordsByCapitalLetters(string words)
         {
+            if (string.IsNullOrWhiteSpace(words))
+            {
+                return string.Empty;
+            }
+
             words = words.Replace("_", string.Empty);
             return words.Aggregate(string.Empty, (result, next) =>
             {
-                if (char.IsUpper(next) && result.Length > 1)
+                if (char.IsUpper(next) &&
+                    result.Length > 1 &&
+                    result.Last() != ' ' &&
+                    !char.IsUpper(result.Last()))
                 {
                     result += ' ';
+                }
+
+                if (result.Length > 2 &&
+                    char.IsUpper(result.ElementAt(result.Length - 2)) &&
+                    char.IsUpper(result.Last()) &&
+                    char.IsLower(next))
+                {
+                    result = result.Insert(result.Length - 1, " ");
                 }
 
                 return result + next;
@@ -33,18 +50,73 @@ namespace Definux.Utilities.Functions
         /// <returns></returns>
         public static string ConvertToKey(string words)
         {
-            words = words.Replace("_", string.Empty);
-            string key = words.Aggregate(string.Empty, (result, next) =>
+            if (string.IsNullOrWhiteSpace(words))
             {
-                if (char.IsUpper(next) && result.Length > 1)
+                return string.Empty;
+            }
+
+            var wordsElements = words.Split('_');
+            var resultKeysComponents = new List<string>();
+            foreach (var wordsElement in wordsElements)
+            {
+                string processedWordsElement = SplitWordsByCapitalLetters(ClearMultipleIntervals(wordsElement)).Replace(" ", "_");
+                string key = processedWordsElement.Aggregate(string.Empty, (result, next) =>
                 {
-                    result += '_';
+                    if (result.Length > 1 && next == '_')
+                    {
+                        return result + next;
+                    }
+
+                    if (char.IsUpper(next) &&
+                        result.Length > 1 &&
+                        result.Last() != '_' &&
+                        !char.IsUpper(result.Last()))
+                    {
+                        result += '_';
+                    }
+
+                    if (result.Length > 1 && result.Last() == next && next == '_')
+                    {
+                        return result;
+                    }
+
+                    return result + next;
+                });
+
+                resultKeysComponents.Add(key?.ToUpper() ?? string.Empty);
+            }
+
+            return string.Join("_", resultKeysComponents.Where(x => !string.IsNullOrEmpty(x)));
+        }
+
+        /// <summary>
+        /// Trim useless intervals from a string.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ClearMultipleIntervals(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return string.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return " ";
+            }
+
+            return value.Aggregate(string.Empty, (result, next) =>
+            {
+                if (result.Length > 1 &&
+                    result.Last() == ' ' &&
+                    next == ' ')
+                {
+                    return result;
                 }
 
                 return result + next;
             });
-
-            return key.ToUpper();
         }
     }
 }

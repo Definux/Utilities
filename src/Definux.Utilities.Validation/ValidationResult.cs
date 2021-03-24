@@ -8,7 +8,7 @@
         /// <summary>
         /// Status of the validation.
         /// </summary>
-        public bool Successed { get; set; }
+        public bool Succeeded { get; set; }
 
         /// <summary>
         /// Message of the validation.

@@ -21,8 +21,7 @@ namespace Definux.Utilities.Validation
             T returnObject = this.RequestObject;
             if (returnObject != null && this.nextHandler != null)
             {
-                string newResultMessage = string.Empty;
-                returnObject = this.nextHandler.Handle(requestObject, out newResultMessage);
+                returnObject = this.nextHandler.Handle(requestObject, out var newResultMessage);
 
                 validationResultMessage += newResultMessage;
             }

@@ -20,7 +20,7 @@ namespace Definux.Utilities.Functions
         {
             if (decimalPlaces < 0)
             {
-                throw new ArgumentOutOfRangeException("decimalPlaces");
+                throw new ArgumentOutOfRangeException(nameof(decimalPlaces));
             }
 
             if (value < 0)

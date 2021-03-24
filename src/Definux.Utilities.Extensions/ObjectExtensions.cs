@@ -14,7 +14,7 @@ namespace Definux.Utilities.Extensions
         /// <returns></returns>
         public static Guid GetGuidValueOrDefault(this object value)
         {
-            Guid resultGuid = Guid.Empty;
+            var resultGuid = Guid.Empty;
             if (value != null)
             {
                 Guid.TryParse(value.ToString(), out resultGuid);
